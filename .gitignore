@@ -1,9 +1,24 @@
-# LaTeX build artifacts
+# Build outputs
+*.pdf
+*.gz
+
+# latexmk / LaTeX build artifacts
 .latexmk/
 *.aux
 *.log
 *.out
 *.fls
 *.fdb_latexmk
-*.synctex.gz
+*.synctex
+*.synctex(busy)
+*.xdv
+*.dvi
 *.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.nav
+*.snm
