@@ -1,0 +1,127 @@
+% Include guard: safe to \input{macros} more than once (e.g. once directly
+% and once via common.tex, which also loads it).
+\ifdefined\pfplMacrosLoaded\endinput\fi
+\global\let\pfplMacrosLoaded\empty
+
+% --- Sequence notation ---
+% Expand an expression with one free variable s' (e.g. s(s')) into the
+% sequence obtained by ranging s' over 1..n: \seqapp{s} => s(1), \dots, s(n)
+% Optional second argument overrides the delimiter (default ","):
+%   \seqapp{s}[;] => s(1); \dots; s(n)
+\RequirePackage{xparse}
+\RequirePackage{textgreek}
+\NewDocumentCommand{\seqapp}{ m O{,} }
+ {
+   #1(1)#2\dots#2#1(n)
+ }
+
+% Like \seqapp, but #1 is the NAME (no backslash) of an existing one-argument
+% macro to invoke at index 1 and index n, e.g. \seqcall{indexedValence} =>
+% \indexedValence{1}, \dots, \indexedValence{n}. Optional delimiter as above.
+\NewDocumentCommand{\seqcall}{ m O{,} }
+ {
+   \csname #1\endcsname{1}#2\dots#2\csname #1\endcsname{n}
+ }
+
+% --- Math-alphabet shorthand generator ---
+% \GenMathShorthand{prefix}{\mathXX}{letters} defines, for each letter L in
+% `letters`, \prefixL := \mathXX{L}. `letters` is just typed out (e.g.
+% ABC...Z), not a range expression, so any subset/order is fine.
+\RequirePackage{xparse}
+\ExplSyntaxOn
+\NewDocumentCommand{\GenMathShorthand}{ m m m }
+ {
+   \tl_map_inline:nn { #3 }
+     {
+       \exp_args:Ncx \newcommand { #1 ##1 } { \exp_not:N #2 {##1} }
+     }
+ }
+\ExplSyntaxOff
+
+% --- Format-composition dispatcher ---
+% \NewFmt{c}{\cmd} registers a format character c (any single token/char) so
+% it can appear in \f's format-code prefix as a stand-in for \cmd, which must
+% take exactly one argument.
+% \f <fmt>.<word> composes the registered commands for each character of
+% <fmt>, left to right = outermost to innermost, around <word>:
+%   \f vc.A     => \vec{\mathcal{A}}
+%   \f b.{xy}   => \mathbf{xy}          (braced word for more than one token)
+% Text-mode commands (e.g. \texttt, registered as 't') must come last/
+% innermost when mixed with math-only commands (\vec, \mathcal, \mathbf,
+% \mathit, ...): \f it.A works (\mathit{\texttt{A}}), \f ti.A does not
+% (\texttt switches to text/LR mode, and \mathit then fails outside math).
+\ExplSyntaxOn
+\prop_new:N \g__pfpl_fmt_prop
+\tl_new:N \l__pfpl_f_fmt_tl
+\tl_new:N \l__pfpl_f_acc_tl
+
+\msg_new:nnn { pfpl } { fmt-undefined }
+  { Format~character~'#1'~is~not~defined;~use~\iow_char:N\\NewFmt~to~register~it~first. }
+\msg_new:nnn { pfpl } { fmt-duplicate }
+  { Format~character~'#1'~is~already~defined. }
+
+\NewDocumentCommand{\NewFmt}{ m m }
+ {
+   \prop_if_in:NnTF \g__pfpl_fmt_prop {#1}
+     { \msg_error:nnn { pfpl } { fmt-duplicate } {#1} }
+     { \prop_gput:Nnn \g__pfpl_fmt_prop {#1} {#2} }
+ }
+
+\NewDocumentCommand{\f}{ u{.} m }
+ {
+   \group_begin:
+     \tl_set:Nn \l__pfpl_f_fmt_tl {#1}
+     \tl_reverse:N \l__pfpl_f_fmt_tl
+     \tl_set:Nn \l__pfpl_f_acc_tl {#2}
+     \tl_map_inline:Nn \l__pfpl_f_fmt_tl
+       {
+         \prop_if_in:NnTF \g__pfpl_fmt_prop {##1}
+           {
+             \tl_set:Nx \l__pfpl_f_acc_tl
+               {
+                 \prop_item:Nn \g__pfpl_fmt_prop {##1}
+                   { \exp_not:V \l__pfpl_f_acc_tl }
+               }
+           }
+           { \msg_error:nnn { pfpl } { fmt-undefined } {##1} }
+       }
+     \tl_use:N \l__pfpl_f_acc_tl
+   \group_end:
+ }
+\ExplSyntaxOff
+
+\NewFmt{v}{\vec}
+\NewFmt{c}{\mathcal}
+\NewFmt{b}{\mathbf}
+\NewFmt{i}{\mathit}
+\NewFmt{t}{\texttt}
+
+% --- Single-letter shorthands (via \GenMathShorthand) ---
+% \vA, \vB, ..., \vz := \vec{A}, \vec{B}, ..., \vec{z}
+% \cA, \cB, ..., \cZ := \mathcal{A}, \mathcal{B}, ..., \mathcal{Z}
+% Uses plain \newcommand internally, so any name collision errors loudly
+% instead of silently overriding an existing command.
+\GenMathShorthand{v}{\vec}{ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz}
+\GenMathShorthand{c}{\mathcal}{ABCDEFGHIJKLMNOPQRSTUVWXYZ}
+
+% --- Alias generator ---
+% \GenAlias{newprefix}{oldprefix}{names} defines, for each comma-separated
+% name in `names`, \newprefixNAME as an alias (\let) for \oldprefixNAME.
+% Unlike \GenMathShorthand, `names` can be multi-character (e.g. Greek letter
+% names), and the target must already exist and take no arguments (\let just
+% copies its meaning, it doesn't wrap it). Errors loudly instead of silently
+% overriding if \newprefixNAME is already defined.
+\ExplSyntaxOn
+\msg_new:nnn { pfpl } { alias-duplicate }
+  { Shorthand~\iow_char:N\\#1~already~defined;~not~aliased. }
+
+\NewDocumentCommand{\GenAlias}{ m m m }
+ {
+   \clist_map_inline:nn {#3}
+     {
+       \exp_args:Nc \cs_if_exist:NTF { #1 ##1 }
+         { \msg_error:nnn { pfpl } { alias-duplicate } { #1 ##1 } }
+         { \exp_args:Ncc \let { #1 ##1 } { #2 ##1 } }
+     }
+ }
+\ExplSyntaxOff

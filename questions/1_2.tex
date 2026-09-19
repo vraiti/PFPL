@@ -1,0 +1,44 @@
+\documentclass[11pt]{book}
+
+\input{header.sty}
+
+\begin{document}
+
+\begin{enumerate}
+    \item[1.2] Prove by structural induction modulo renaming on ABTs that if $\cX \subseteq \cY$, then, $\cB[\cX] \subseteq \cB[\cY]$
+\end{enumerate}
+
+\br
+
+Abstract Binding Tree definition:
+\begin{enumerate}
+    \item If $x \in \mathcal{X}_{s}$, then $x \in \mathcal{B[X]}_{s}$
+    \item For each operator $o$ of arity $(\vec{s}_1.s_1,\dots,\vec{s}_n.s_n)s$, if for each $1 \leq i \leq n$ and each fresh renaming $\rho_i : \vec{x}_i \leftrightarrow \vec{x}'_i$, we have $\hat{\rho}_i(a_i) \in \mathcal{B}[\mathcal{X},\vec{x}'_i]$, then $o(\vec{x}_1.a_1;\dots;\vec{x}_n.a_n) \in \mathcal{B[X]}_s$.
+\end{enumerate}
+
+Structural induction on $\cB[\cX]$: For property $\cP[\cX](a)$ if we show that both
+\begin{enumerate}
+    \item If $x \in \cX$, then $\cP[\cX](x)$ 
+    \item Let $o$ be an operator with arity $(\vs_1.s_1,\dots,\vs_n.s_n)s$ and let $\vx_1.a_1,\dots,\vx_n.a_n$ be a sequence of abstractors with those valences. If for any $i \in [1,n]$ and any renaming $\rho_i: \vx_i \leftrightarrow \vx'_i$ with $\vx'_i \notin \cX$, $\cP[\cX](\hat{\rho}(a_i))$, then $\cP[\cX](o(\vx_1.a_1;\dots;\vx_n.a_n))$
+\end{enumerate}
+Then by structural induction on $\cB[\cX]$, $\forall a \in \cB[\cX]$, $\cP[\cX](a)$
+
+\br
+
+Let $\cP[\cX](a) = (\forall \cY' \supseteq \cX, a \in \cB[\cY'])$
+
+The structural induction on $\mathcal{B[X]}$ is given as follows:
+\begin{enumerate}
+    \item Base case: $\forall x \in \cX \forall \cY' \supseteq \cX, x \in \cY'$ since $\cX \subseteq \cY'$, so $x \in \cB[\cY']$ by part 1 of the definition of $\cB[\cY]$ and $\cP[\cX](x)$.
+    \item Inductive case: For given $\cY' \supseteq \cX$, $o$ of arity $(\vs_1.s_1,\dots,\vs_n.s_n)s$, and sequence of abstrators $\vec{x}_1.a_1,\dots,\vec{x}_n.a_n$ with corresponding valences, assume as the inductive hypothesis that for any $i \in [1,n]$ and any renaming $\rho_i: \vx_i \leftrightarrow \vx'_i$ with $\vx'_i \notin \cX$, that $\cP[\cX,\vx'_i](\hat{\rho}_i(a_i))$. That is, $\forall \cY'' \supseteq (X, \vx'_i)$, $\hat{\rho}_i(a_i) \in \cB[\cY'']$. 
+    
+    Fix arbitrary $\cY^{(3)} \supseteq \cX$ so that any $\vx'_i$ fresh for $\cY^{(3)}$ is also fresh for $\cX$. Then, $\cY^{(3)}, \vx'_i \supseteq \cX, \vx'_i$ is well-defined and true for any $\vx'_i \notin \cY^{(3)}$.
+    
+    Now we weaken our inductive hypothesis by quantifying over only $\vx'_i \notin \cY^{(3)}$, giving $\forall i \in [1,n] \forall \hat{\rho}_i: \vx_i \leftrightarrow \vx'_i$ s.t. $\vx'_i \notin \cY^{(3)}$, $\hat{\rho}(a_i) \in \cB[\cY^{(3)},\vx'_i]$. Therefore $o(\vec{x}_1.a_1;\dots;\vec{x}_n.a_n) \in \cB[\cY^{(3)}]$ by part 2 of the definition of $\cB[\cY^{(3)}]$. 
+    
+    Quanitifying over arbitrary $\cY^{(3)}$ now gives that $\forall \cY^{(3)} \supseteq \cX$, $o(\vec{x}_1.a_1;\dots;\vec{x}_n.a_n) \in \cB[\cY^{(3)}]$ and $\cP[\cX](o(\vec{x}_1.a_1;\dots;\vec{x}_n.a_n))$
+\end{enumerate}
+
+Therefore, $\forall a \in \mathcal{B[X]}$, $a \in \mathcal{B[Y]}$ by structural induction on $\mathcal{B[X]}$ and $\mathcal{B[X]} \subseteq \mathcal{B[Y]}$
+
+\end{document}

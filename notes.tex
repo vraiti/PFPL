@@ -1,0 +1,99 @@
+\documentclass[11pt]{book}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{plmacros}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{parskip}
+
+\input{macros}
+\input{common}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\chapter{Abstract Syntax}
+\section{Abstract Syntax Trees}
+
+Let $\mathcal{S}$ be a finite set of sorts. For a given $\mathcal{S}$, an arity has the form $(s_1,\dots,s_n)s$. 
+
+Let $\mathcal{O} = {\mathcal{O}_\alpha}$ be an arity-indexed family of disjoint sets of operators ${\mathcal{O}
+_\alpha}$ of arity $\alpha$.
+
+Fix a $\mathcal{S}$ and a $\mathcal{O}$. Let $\mathcal{X} = \{\mathcal{X}\}_{s \in \mathcal{S}}$ be a sort-indexed family of disjoint finite sets $\mathcal{X}_s$ of variables $x$ of sort $s$. We say $x$ is fresh for $\mathcal{X}$ if $x \notin \mathcal{X}$ and that $\mathcal{X},x$ is the set obtained by adding $x$ to $\mathcal{X}_s$ if $s$ is a sort.
+
+Finally, $\mathcal{A[X]} = \{{\mathcal{A[X]}}_s : s \in \mathcal{S}\}$ is the family of \textbf{abstract syntax trees} is the smallest family satisfying the following:
+\begin{enumerate}
+    \item $\forall x \in \mathcal{X}_s, x \in \mathcal{A[X]}_s$
+    \item If $o$ is an operator of arity $(s_1,\dots,s_n)s$ and $a_1 \in \mathcal{A[X]}_{s_1}, \dots a_n \in \mathcal{A[X]}_{s_n}$, then $o(a_1,\dots,a_n) \in \mathcal{A[X]}_s$
+\end{enumerate}
+
+\br
+
+\textbf{Structural induction} can be used to prove that some property $\mathcal{P}(a)$ holds $\forall a \in \mathcal{A[X]}$ if both of the following hold:
+\begin{enumerate}
+    \item Base case: show if $a \in \mathcal{X}_s$, then $\mathcal{P}_s(a)$
+    \item Inductive case: show if $o$ has arity $(s_1,\dots,s_n)s$ and $\forall i: \mathcal{P}_{s_i}(a_i)$, then $\mathcal{P}_s(o(a_1,\dots,a_n))$
+\end{enumerate}
+
+\br
+
+\textbf{Substitution} (denoted with $[b/x]a$ for subsituting all occurances of $x$ with $b$ in $a$) is defined as
+\begin{enumerate}
+    \item $[b/x]x = b$ and $[b/x]y = y$ if $x \neq y$
+    \item $[b/x]o(a_1;\dots;a_n) = o([b/x]a_1;\dots;[b/x]a_n)$
+\end{enumerate}
+
+\section{Abstract Binding Trees}
+Abstract binding trees enrich abstract syntax trees by allowing \textit{each argument of an operator} to specify a number of variables to bind. An argument to an ABT operator is called an \textbf{abstractor} and has the form $x_1,\dots,x_n.a$
+
+\textbf{let} is a function that can be used to resolve bindings to an abstractor and has the form $\texttt{let}(a_1,x.a_2)$ or, more naturally, $\texttt{let}$ $x$ $\texttt{be}$ $a_1$ $\texttt{in}$ $a_2$.
+
+ABT operators have \textbf{generalized arities} that specify a \textbf{valence} for each \textbf{abstractor} argument. A valence $v$ has the form $s_1,\dots,s_n.s$ to state that the abstractor binds n arguments of sort $s_1,\dots,s_n$ and is itself of sort $s$.
+
+\br
+
+The ABTs $\mathcal{B[X]}$ over a family of sorts $\mathcal{X}$ is defined as
+\begin{enumerate}
+    \item If $x \in \mathcal{X}$, then $x \in \mathcal{B[X]}$
+    \item For each operator $o$ of arity $(\vec{s}_1.s_1,\dots,\vec{s}_n.s_n)s$, if for each $1 \leq i \leq n$  and each fresh renaming $\rho_i: \vec{x}_i, \leftrightarrow \vec{x}'_i$, we have $\hat{\rho}_i(a_i) \in \mathcal{B}[\mathcal{X},\vec{x}'_i]$, then $o(\vec{x}_1.a_1;\dots;\vec{x}_n.a_n) \in \mathcal{B[X]}_s$
+\end{enumerate}
+
+\br
+
+Similar to ASTs, \textbf{structural induction} on ABTs can be used to prove that some property $\cP[\cX]$ holds for all $a \in {\cB[\cX]}$ by showing both:
+\begin{enumerate}
+    \item If $x \in \cX$ then $\cP[\cX](x)$
+    \item For every $o$ of arity $\arityb$, if for each $1 \leq i \leq n$, $\cP[\cX,\vx'_i]_{s_i}(\hat{\rho_i}(a_i))$ holds for every $\rho_i: \vx_i \biject \vx'_i$ with $\vx'_i \notin \cX$, then $\cP[\cX]_s(\abtOperatorInstance)$
+\end{enumerate}
+
+\br
+
+\textbf{$\alpha$-equivalence}, written $a =_\alpha b$ is a relation that states two ABTs $a$ and $b$ are equivalent up to renaming of names of variables bound within either. $\alpha$-equvalence is the strongest congruence containing the following conditions:
+
+We will consider $\alpha$-equivalent ABTs to be the same going forward.
+
+\br
+
+\textbf{substitution} for ABTs is defined as 
+\begin{enumerate}
+    \item $[b/x]x=b$ and $[b/x]y=y$ (if $y \neq x$)
+    \item $[b/x]\abtOperatorInstance=\abtOperatorInstancePrimeb$ where $\forall i$ we require $\vec{x}_i \notin b$ and we say $a'_i=[b/x]a_i$ if $x \notin \vec{x}_i$ and $a'_i=a_i$ otherwise
+\end{enumerate}
+
+The second item in that bullet is to capture that if $x$ is bound within $a_i$, then occurances of $x$ within $a_i$ do not refer to the $x$ that the substitution refers to.
+
+\br
+
+One subtelty of substitution is with \textbf{capture} of free variables. That is, for $[b/x]o(\vx_1.a_1;\dots;\vx_n.a_n)$ if $y\in \vx_i$, $y \in b$, and $y \neq x$, then the substitution is undefined because y is \textit{captured} by $b$. 
+
+We define \textbf{symbols} or \textbf{symbolic parameters} in the context of indexing operators. An \textbf{indexed operator} $o$ is a family of operators indexed by symbols $u$ such that $o[u]$ is an operator when $u$ is an available symbol. For a finite set of symbols $\cU$, $\cB[\cU;\cX]$ is the sort-indexed family of ABTs of $\cX$, also admitting all indexed operator instances of symbols $u \in \cU$.
+
+Note that while a variable is a place-holder that stands in for an unknown ABT of the given sort, a symbol doesn't stand for anything and is not, itself, an ABT.
+
+We can extend the set of symbols by introducting a fresh symbol within a scope using an abstractor $u.a$ which binds the symbol $u$ within $a$
+
+
+
+\end{document}

@@ -1,0 +1,12 @@
+{
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": ".*",
+        "notMatch": "\\.git/",
+        "isAsync": true,
+        "cmd": "\"${workspaceFolder}/.vscode/autocommit.sh\" \"${relativeFile}\""
+      }
+    ]
+  }
+}

@@ -1,0 +1,66 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathpartir}
+\usepackage{array}
+
+%% PFPL conventions: operators sans-serif, variables italic,
+%% arguments separated by ';', binding by '.'
+\newcommand{\op}[1]{\mathsf{#1}}
+\newcommand{\Exp}{\op{Exp}}
+\newcommand{\Typ}{\op{Typ}}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{definition}[Abstractor]
+An \emph{abstractor} of valence $s_1,\dots,s_k.s$ is a phrase
+\[
+  x_1,\dots,x_k.a ,
+\]
+abbreviated $\vec{x}.a$, where $x_1,\dots,x_k$ are distinct variables with
+$x_i$ of sort $s_i$, and $a$ is an abt of sort $s$ in which each $x_i$ is
+bound. For $k = 0$ it is just $a$.
+\end{definition}
+\bigskip
+\noindent\textbf{How to write it.}
+
+\begin{center}
+\begin{tabular}{@{}>{\ttfamily\small}l@{\qquad}l@{}}
+\multicolumn{1}{@{}l@{\qquad}}{\textbf{source}} & \textbf{output} \\[4pt]
+\hline \\[-6pt]
+x.a                                & $x.a$ \\[4pt]
+\textbackslash vec\{x\}.a          & $\vec{x}.a$ \\[4pt]
+x\_1,\textbackslash dots,x\_k.a    & $x_1,\dots,x_k.a$ \\[4pt]
+\textbackslash Exp.\textbackslash Exp
+                                   & $\Exp.\Exp$ \\[4pt]
+(\textbackslash Exp,\ \textbackslash Exp.\textbackslash Exp)\textbackslash Exp
+                                   & $(\Exp,\ \Exp.\Exp)\Exp$ \\[4pt]
+\textbackslash op\{let\}(a\_1 \textbackslash,;\textbackslash, x.a\_2)
+                                   & $\op{let}(a_1 \,;\, x.a_2)$ \\[4pt]
+\textbackslash op\{lam\}[\textbackslash tau](x.a)
+                                   & $\op{lam}[\tau](x.a)$ \\[4pt]
+[b/x]a                             & $[b/x]a$ \\[4pt]
+a =\_\textbackslash alpha b        & $a =_\alpha b$ \\
+\end{tabular}
+\end{center}
+
+\bigskip
+\noindent\textbf{Formation rule (for reference).}
+
+\begin{mathpar}
+\inferrule*[right=op]
+  { \mathcal{X}, \vec{x}_1 \vdash a_1 : s_1 \\ \cdots \\
+    \mathcal{X}, \vec{x}_n \vdash a_n : s_n }
+  { \mathcal{X} \vdash o(\vec{x}_1.a_1 \,;\, \dots \,;\, \vec{x}_n.a_n) : s }
+\end{mathpar}
+
+\noindent
+where $o$ has arity $(\vec{s}_1.s_1,\dots,\vec{s}_n.s_n)s$.
+
+\end{document}

@@ -1,0 +1,34 @@
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathpartir}
+\usepackage{array}
+\usepackage{parskip}
+\usepackage{microtype}
+\setlength{\emergencystretch}{3em}
+
+%% PFPL conventions: operators sans-serif, variables italic,
+%% arguments separated by ';', binding by '.'
+\newcommand{\op}[1]{\mathsf{#1}}
+\newcommand{\Exp}{\op{Exp}}
+\newcommand{\Typ}{\op{Typ}}
+
+\usepackage{xparse}
+\ExplSyntaxOn
+\NewDocumentCommand{\GenMathShorthand}{ m m m }
+ {
+   \tl_map_inline:nn { #3 }
+     {
+       \exp_args:Ncx \newcommand { #1 ##1 } { \exp_not:N #2 {##1} }
+     }
+ }
+\ExplSyntaxOff
+\GenMathShorthand{v}{\vec}{ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz}
+\GenMathShorthand{c}{\mathcal}{ABCDEFGHIJKLMNOPQRSTUVWXYZ}
+
+\newcommand{\br}{\vspace{.5cm}}
+
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\pagestyle{empty}

@@ -1,0 +1,22 @@
+\input{macros.tex}
+
+\newcommand{\biject}{\leftrightarrow}
+\newcommand{\br}{\vspace{.5cm}}
+
+% chapter 1
+\newcommand{\arityb}{(\vs_1.s_1,\dots,\vs_n.s_n)s}
+
+\newcommand{\indexedValence}[1]{\vs_#1.s_#1}
+\newcommand{\abtOperatorDef}{o(\seqcall{indexedValence})}
+
+\newcommand{\indexedAbstractor}[1]{\vx_#1.a_#1}
+\newcommand{\abtOperatorInstance}{o(\seqcall{indexedAbstractor}[;])}
+
+\newcommand{\indexedAbstractorPrime}[1]{\vx'_#1.a'_#1}
+\newcommand{\abtOperatorInstancePrime}{o(\seqcall{indexedAbstractorPrime}[;])}
+
+\newcommand{\indexedAbstractorPrimeb}[1]{\vx_#1.a'_#1}
+\newcommand{\abtOperatorInstancePrimeb}{o(\seqcall{indexedAbstractorPrimeb}[;])}
+
+\newcommand{\renamingDef}{\rho_i: \vx_i \biject \vz_i}
+\newcommand{\renamingDefPrime}{\rho'_i: \vx'_i \biject \vz_i}
