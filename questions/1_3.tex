@@ -20,11 +20,22 @@ And substitution for ABTs is defined as
     \item $[b/x]o(\vx_1.a_1;\dots;\vx_n.a_n) = o(\vx_1.a'_1;\dots;\vx_n.a'_n)$ where $\forall i$ we require $\vx_i \notin b$ and we let $[b/x]a_i$ if $x \notin \vx_i$ else $a'_i = a_i$ 
 \end{enumerate}
 
-Let each ABT $s$ expand to $o_s(\vx_{s,1}.a_{s,1};\dots;\vx_{s,n})$. 
+Trivially, two ABTs $a$ and $b$ can be considered equivalent if $a =_\alpha b$, so by simple substitution $[b/x]a =_\alpha [d/x]c$.
+
+\br
+
+Formally, however, let each ABT $s$ expand to $o_s(\vx_{s,1}.a_{s,1};\dots;\vx_{s,n})$. 
 
 Then, $[b/x]a$ expands to $o_a(\vx_{a,1}.a'_{a,1};\dots;\vx_{a,n}.a'_{a,n})$ with $a'_{a,i} = [b/x]a_{a,i}$ if $x \notin \vx_{a,i}$ else $a'_{a,i} = a_{a,i}$
 
-Similarly $[d/x]c$ expands to $o_a(\vx_{a,1}.a'_{a,1};\dots;\vx_{a,n}.a'_{a,n})$ with $a'_{a,i} = [b/x]a_{a,i}$ if $x \notin \vx_{a,i}$ else $a'_{a,i} = a_{a,i}$
-Since $a =_\alpha a'$, we know 
+Similarly $[d/x]c$ expands to $o_c(\vx_{c,1}.a'_{c,1};\dots;\vx_{a,n}.a'_{a,n})$ with $a'_{a,i} = [b/x]a_{a,i}$ if $x \notin \vx_{a,i}$ else $a'_{a,i} = a_{a,i}$
+
+\br
+
+Since $a =_\alpha c$, we know $\hat{\rho_{a,i}}(a_{a,i}) =_\alpha \hat{\rho_{c,i}}(a_{c,i})$ for all $i$ and for all fresh renamings $\rho_{a,i}$ and $\rho_{c,i}$
+
+Similarly, since $b =_\alpha d$, we know $\hat{\rho_{b,i}}(a_{b,i}) =_\alpha \hat{\rho_{d,i}}(a_{d,i})$ for all $i$ and for all fresh renamings $\rho_{b,i}$ and $\rho_{d,i}$
+
+Now, for each $\vx_{a,i}.a'_{a,i}$ and $\vx_{c,i}.a'_{c,i}$
 
 \end{document}
