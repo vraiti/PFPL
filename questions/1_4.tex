@@ -1,0 +1,17 @@
+\documentclass[11pt]{book}
+
+\input{header.sty}
+
+\begin{document}
+
+\begin{enumerate}
+    \item[1.4] An alternative representation of abts, called \textit{astract binding graphs}, or \textit{abg's} for short, are directed graphs constructed as follows: 
+    \begin{enumerate}
+        \item Free variables are atomic nodes with no outgoing edges
+        \item Operators with $n$ arguments are $n$-ary nodes, with one outgoing edge directed at each of their children
+        \item Abstractors are nodes with one edge directed to the scope of the abstracted variable
+        \item Bound variables are back edges directed at the abstractor that introduced it
+    \end{enumerate}
+    Give a precise definition of the sort-index family $\cG[\cX]$ of abstract binding graphs
+\end{enumerate}
+

@@ -2,6 +2,9 @@
 *.pdf
 *.gz
 
+# editor files
+.*.swp
+
 # latexmk / LaTeX build artifacts
 .latexmk/
 *.aux

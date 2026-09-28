@@ -103,25 +103,4 @@
 % instead of silently overriding an existing command.
 \GenMathShorthand{v}{\vec}{ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz}
 \GenMathShorthand{c}{\mathcal}{ABCDEFGHIJKLMNOPQRSTUVWXYZ}
-
-% --- Alias generator ---
-% \GenAlias{newprefix}{oldprefix}{names} defines, for each comma-separated
-% name in `names`, \newprefixNAME as an alias (\let) for \oldprefixNAME.
-% Unlike \GenMathShorthand, `names` can be multi-character (e.g. Greek letter
-% names), and the target must already exist and take no arguments (\let just
-% copies its meaning, it doesn't wrap it). Errors loudly instead of silently
-% overriding if \newprefixNAME is already defined.
-\ExplSyntaxOn
-\msg_new:nnn { pfpl } { alias-duplicate }
-  { Shorthand~\iow_char:N\\#1~already~defined;~not~aliased. }
-
-\NewDocumentCommand{\GenAlias}{ m m m }
- {
-   \clist_map_inline:nn {#3}
-     {
-       \exp_args:Nc \cs_if_exist:NTF { #1 ##1 }
-         { \msg_error:nnn { pfpl } { alias-duplicate } { #1 ##1 } }
-         { \exp_args:Ncc \let { #1 ##1 } { #2 ##1 } }
-     }
- }
-\ExplSyntaxOff
+\GenMathShorthand{s}{\mathsf}{ABCDEFGHIJKLMNOPQRSTUVWXYZ}

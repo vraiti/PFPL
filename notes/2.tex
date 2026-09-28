@@ -1,0 +1,82 @@
+\documentclass[11pt]{book}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{plmacros}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{parskip}
+
+\input{macros}
+\input{common}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\chapter{Inductive Definitions}
+
+An \textbf{inductive definition} consists of a set of \textbf{rules} for deriving \textbf{judgements} or \textbf{assertions} where judgements are statements about one or more abts of some sort.
+
+\section{Judgements}
+
+A \textbf{judgement} states that one or more ABTs have a property or stand in some relation to one another. The property or relation itself is called the \textbf{judgement form} and the assertion that a particular jugement form holds for a given set of objects is an \textbf{instance} of that judgement form.
+
+Judgement forms are otherwise known as \textbf{predicates} and the objects of some judgement the \textbf{subjects}
+
+For judgement $\mathsf{J}$ and abt $a$ we write $a\ \mathsf{J}$ or $\sJ\ a$ to indicate that $\sJ$ holds for $a$.
+
+\section{Inference Rules}
+
+An \textbf{inductive definition} of a judgement form consists of a collection of \textbf{rules} of the form
+
+$\frac{J_1\ \dots J_k}{J}$
+
+Where $J$ and $J_1,\dots,J_k$ are judgements of the form being defined. The $J$ below the line is called the \textbf{conclusion} and the $J_1,\dots,J_k$ above the line are called \textbf{premises}. A rule where $k=0$ (no premises) is called an \textbf{axiom}, otherwise it is called a \textbf{proper rule}.
+
+\br
+
+Note that notational conventions for rules can be used to specify either a single rule or an infinite family of rules called a \textbf{rule scheme}. The reader should rely on context clues to decide which the given definition refers to.
+
+\br
+
+A given collection of rules is considered to define the \textbf{strongest} judgement form that is \textbf{closed} under those rules. \textbf{Closed} meaning that those rules are \textit{sufficient} to show the validity of a judgement ($J$ holds if there's a way to obtain it using the given rules) and \textbf{strongest} meaning that the rules are also \textit{necessary} ($J$ holds only if there's a way to obtain it using the given rules)
+
+Sufficiency allows us to derrive $J$ by composing rules. Necessity allows us to reason about it using \textit{rule induction}.
+
+\section{Derivations}
+
+A derivation of a judgement is a finite composition of rules, starting with axioms and ending with that judgement:
+
+Given judgment $J = \frac{J_1\ \dots\ J_k}{J}$ and derivations $\nabla_1,\dots,\nabla_k$ of $J_1 \dots J_K$, then
+
+$\frac{\nabla_1\ \dots\ \nabla_k}{J}$ is a derivation of $J$'s conclusion.
+
+In this way, a derivation may be thought of as a varadic tree with leaves that are axioms and a root that is a conclusion
+
+\section{Rule Induction}
+
+The principle of rule induction states that to show a property $a\ \cP$ holds whenever $a\ \sJ$ is derivable, it is enough to show that $\cP$ is \textit{closed under} or \textit{respects} the rules defining the judgement form $\sJ$. Formally, property $\cP$ is closed under the rule
+
+$\frac{a_1\sJ\ \dots\ a_k\sJ}{a\sJ}$
+
+If $\cP(a)$ holds whenever $\cP(a_1),\dots,\cP(a_k)$ also do. In this case, $\cP(a_1),\dots,\cP(a_k)$ are the \textbf{inductive hypotheses} and $\cP(a)$ is the \textbf{inductive conclusion} of the inference.
+
+\section{Iterated and Simultaneous Inductive Definitions}
+
+Inductive definitions may often be \textit{iterated}, meaning that one inductive defintion builds on top of another. The premises $J_1\ \dots\ J_k$ of a judgement form may be instances of a previously defined judgement form or the judgement being defined.
+
+Additionally, two or more judgements may be defined at once by a \textit{simultaneous inductive definition}, wherein the premises of each may be instances of any of the judgements being simultaneously defined.
+
+In any of these cases, rule induction now only requires a unique $\cP_J$ \textit{for each} unique $J$ being defined in our rule set.
+
+\section{Defining Functions by Rules}
+
+Inductive defintions are commonly used to define different functions. Since functions are, after all, simply a set of tuples between a domain and codomain.
+
+For example, $\mathtt{sum}(a;b;c)$ may be defined via the following rule set:
+
+$\frac{b \mathtt{nat}}{\mathtt{sum}(\mathtt{zero};b;b)}$
+
+$\frac{\mathtt{sum}(a;b;c)}{\mathtt{sum}(\mathtt{succ}(a);b;\mathtt{succ}(c))}$
+
+\end{document}
